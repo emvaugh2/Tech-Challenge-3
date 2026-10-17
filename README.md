@@ -5,7 +5,7 @@
 ## Tech Challenge 3 - Action Steps
 
 * Phase 1: Provision AWS Infrastructure with Terraform
-* Phase 2: Terraform the AWS environment
+* Phase 2: Configure the EC2 Web Server with Ansible
 * Phase 3: EKS cluster setup and add-ons
 
 
@@ -26,37 +26,58 @@ Lets do this!
 
  For the security.tf file, I changed the name of the SG and allowed ports 22 and 80 for ingress. I allowed everything for egress. I pretty much kept my ec2.tf file the same besides changing the name of the IAM role. The iam.tf file gave me the most issues. I had to create an IAM role, policy document, policy, attach the policy document to the policy, and then attach the role to the IAM instance I believe. 
 
- UPDATE: Okay I was totally wrong about the IAM file. I just had Copilot create it for me because I just suck at this right now. We're also having TF inject the index.html and style.css files directly into the S3 bucket upon creation which means we need to generate some code for that as well. AI came up with the two resource blocks in the S3 file as well. 
+ UPDATE: Okay I was totally wrong about the IAM file. I just had Copilot create it for me because I just suck at this right now. We're also having TF inject the index.html and style.css files directly into the S3 bucket upon creation which means we need to generate some code for that as well. AI came up with the two resource blocks in the S3 file as well. Last but not least, after running into some issue installing Ansible on my local machine, I'm going to make another EC2 instance as my Ansible control node. We'll work from there and make sure we're able to SSH into my web server node for operations. 
+
+ I created my GitHub TC3 repo and pushed all of my files up to it. Then, I initialized terraform and did a format and validate. I ran into an issue regarding the SG public IP (PIP) reference. I removed this configuration because security isn't a huge concern here. 
 
  ![Terraform files](pictures/Phase1/tc3phase1pic1.png)
 
+ Now, lets deploy everything! We'll do a terraform fmt -recursive, validate and plan before we apply it all. Once everything looks good, we'll continue. 
+
  ![Terraform init and validation](pictures/Phase1/tc3phase1pic2.png)
+
+Looks like everything worked out perfectly! 
 
  ![Terraform apply success](pictures/Phase1/tc3phase1pic3.png)
 
+Lets get logged into our EC2 instance so we can continue with the Ansible automation section of this project. Lets move on to Phase 2!
 
 
 
-Now, lets terraform our infrastructure so that we can run all of this in the cloud. 
+## Phase 2: Configure the EC2 Web Server with Ansible
+
+Alright now lets get our EC2 instance configured for our static webpage. At first, I was going to use my local computer as the Ansible control but after dealing with installation issues, I'm switching back to creating an EC2 instance as my Ansible control node. Once you log into your control node, install Ansible and create the files for both your inventory and playbook. 
+
+We'll only have one entry in our inventory file for our web server. 
+
+![Ansible installation](pictures/Phase2/tc3phase2pic1.png)
+
+We'll only have one entry in our inventory file for our web server. [explain the rest of the commands in here as well]
+
+![Ansible inventory file](pictures/Phase2/tc3phase2pic2.png)
+
+For our playbook file, I had majority of this file designed already from a previous web server lab. The two sections we added were installing the AWS CLI task and then syncing our S3 bucket's file path with the file path on our EC2 instance so NGINX can always see the web pages. 
+
+![Ansible playbook file](pictures/Phase2/tc3phase2pic3.png)
+
+We'll do a ping test to make sure our controller node can access our web server node. Run the command `` to complete the ping test. 
+
+![Ansible ping test](pictures/Phase2/tc3phase2pic4.png)
+
+Lastly, we'll run our playbook and confirm Ansible has completed all of our tasks for us. Run the command `` to run our playbook. 
+
+![Ansible playbook run](pictures/Phase2/tc3phase2pic5.png)
+
+Automation is pretty time consuming up front but once you get the configurations completed, you're good to go! 
+
+Lets move to Phase 3 to wrap this project up. 
 
 
-## Phase 2: 
 
-We need to make sure our entire AWS environment can automatically be deployed to support our application. We'll use Infrastructure as Code (IaC) via Terraform (TF) to deploy our environment. Now, in Project 2, we already created an Elastic 
+## Phase 3: 
 
-![Terraform file structure](pictures/Phase2/tc3phase2pic1.png)
+This phase w
 
-
-
-
-There were a few modifications post-apply that were added but they should be included in the final TF code inside the repo. Lets move to Phase 3. 
-
-
-
-## Phase 3: EKS cluster setup and add-ons
-
-This phase was extremely command heavy. Overall, we basically needed to set up the Jenkins server EC2 instance to be able to run all of our operations. We needed to install the CLI for AWS, Git, Docker, kubectl, and Helm. I've included the commands to install all of these tools. In the future, I may create an Ansible playbook for this entire section and just run it. 
-
-![Verifies all tools are installed with their proper versions](pictures/Phase3/tc3phase3pic1.png)
+![Veri](pictures/Phase3/tc3phase3pic1.png)
 
 That concludes all of our Tech Challenges!

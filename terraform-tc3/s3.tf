@@ -13,7 +13,7 @@ resource "aws_s3_object" "index_html" {
   key          = "website/index.html"
   source       = "${path.module}/../website/index.html"
   content_type = "text/html"
-  etag = filemd5("${path.module}/../website/index.html")
+  etag         = filemd5("${path.module}/../website/index.html")
 }
 
 
@@ -22,5 +22,5 @@ resource "aws_s3_object" "style_css" {
   key          = "website/style.css"
   source       = "${path.module}/../website/style.css"
   content_type = "text/css"
-  etag = filemd5("${path.module}/../website/style.css")
+  etag         = filemd5("${path.module}/../website/style.css")
 }

@@ -7,7 +7,7 @@ resource "aws_security_group" "webserver_sg" {
   vpc_id      = aws_vpc.supernet.id
 
   ingress {
-    cidr_blocks = ["${chomp(data.http.my_public_ip.response_body)}/32"]
+    cidr_blocks = ["0.0.0.0/0"]
     from_port   = 22
     protocol    = "tcp"
     to_port     = 22
@@ -37,6 +37,3 @@ resource "aws_security_group" "webserver_sg" {
   }
 }
 
-data "http" "webserver_public_ip" {
-  url = "https://api.ipify.org"
-}

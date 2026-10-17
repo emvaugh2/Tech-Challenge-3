@@ -1,0 +1,35 @@
+---
+- name: Configure web server node to host static webpage
+  hosts: webservers
+  become: true
+
+  tasks:
+  - name: Upgrade all packages
+    ansible.builtin.dnf:
+      name: "*"
+      state: latest
+
+  - name: Install NGINX on web server
+    ansible.builtin.dnf:
+      name: nginx
+      state: present
+      
+  - name: Install AWS CLI
+    ansible.builtin.dnf: 
+      name: awscli2
+      state: present
+
+  - name: Retrieve website files from S3 bucket
+    ansible.builtin.command: 
+      cmd: aws s3 sync s3://tc3-s3-web-server-bucket-3/website/ /usr/share/nginx/html/
+
+  - name: Start NGINX service
+    ansible.builtin.service: 
+      name: nginx
+      state: started
+      enabled: true
+    
+
+
+
+      

@@ -30,7 +30,7 @@ data "aws_ssm_parameter" "amazon_linux_2023" {
 }
 
 
-# Creates the EC2 
+# Creates the web server EC2 
 resource "aws_instance" "web_server" {
 
   ami           = data.aws_ssm_parameter.amazon_linux_2023.value
@@ -44,6 +44,29 @@ resource "aws_instance" "web_server" {
 
   iam_instance_profile = aws_iam_instance_profile.webserver_instance_profile.name
 
+
+
+  key_name = aws_key_pair.master_public_key.key_name
+
+  associate_public_ip_address = true
+
+
+  tags = {
+    Project = "Tech-Challenge-3"
+  }
+}
+
+# Creates the Ansible control node EC2 
+resource "aws_instance" "ansible_server" {
+
+  ami           = data.aws_ssm_parameter.amazon_linux_2023.value
+  instance_type = "t3.micro"
+
+  vpc_security_group_ids = [
+    aws_security_group.webserver_sg.id
+  ]
+
+  subnet_id = aws_subnet.public_subnet.id
 
 
   key_name = aws_key_pair.master_public_key.key_name
