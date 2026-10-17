@@ -68,16 +68,24 @@ Lastly, we'll run our playbook and confirm Ansible has completed all of our task
 
 ![Ansible playbook run](pictures/Phase2/tc3phase2pic5.png)
 
-Automation is pretty time consuming up front but once you get the configurations completed, you're good to go! 
+Automation is pretty time consuming up front but once you get the configurations completed, you're good to go! Lets verify that the tasks were completed. In the web server, run the commands `systemctl status nginx` and `ls -l` to your shared S3 bucket mount to show that NGINX is enabled and the proper files are in their directory. 
+
+![Ansible task verification](pictures/Phase2/tc3phase2pic6.png)
 
 Lets move to Phase 3 to wrap this project up. 
 
 
 
-## Phase 3: 
+## Phase 3: Static Webpage Verification
 
-This phase w
+Now for the final part of this TC, lets verify that NGINX is serving the proper webpage for our visitors. We'll first do a `curl localhost` on our web server machine to see if we receive a "Hello, World!" message. 
 
-![Veri](pictures/Phase3/tc3phase3pic1.png)
+![curl localhost](pictures/Phase3/tc3phase3pic1.png)
+
+Nice! Now lets do the same thing in the web browser by going to the web server's public IP. 
+
+![web browswer test](pictures/Phase3/tc3phase3pic2.png)
+
+That message looks every better. We were able to host a static webpage using NGINX that was all deployed automatically via Terraform and Ansible. 
 
 That concludes all of our Tech Challenges!
